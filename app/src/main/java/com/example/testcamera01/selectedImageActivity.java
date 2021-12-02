@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +28,8 @@ public class selectedImageActivity extends AppCompatActivity {
         Intent intent = getIntent();
         getImageUri = intent.getExtras().getString("imageString_cam");
         Bitmap bitmap;
+        Uri outUri = Uri.parse(getImageUri);
+//        selectedImage.setImageResource(outUri);
         bt_selected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
