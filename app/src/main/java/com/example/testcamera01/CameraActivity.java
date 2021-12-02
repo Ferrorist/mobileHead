@@ -57,9 +57,9 @@ public class CameraActivity extends AppCompatActivity{
         surfaceView.capture(new Camera.PictureCallback(){
             @Override
             public void onPictureTaken(byte[] data, Camera camera) { // 사진을 찍은 후 callback 되는 함수.
-                Matrix matrix = new Matrix();   matrix.postRotate(90); // 회전 각도 조정.
-                Bitmap  getImage = BitmapFactory.decodeByteArray(data, 0, data.length); // -90도로 회전되어 있는 상태.
-                Bitmap  bitmap = Bitmap.createBitmap(getImage, 0, 0, getImage.getWidth(), getImage.getHeight(), matrix, false); // 90도를 더 회전시켜 0도로 만든 bitmap.
+                Matrix matrix = new Matrix();   matrix.postRotate(-90); // 회전 각도 조정.
+                Bitmap  getImage = BitmapFactory.decodeByteArray(data, 0, data.length); // 90도로 회전되어 있는 상태.
+                Bitmap  bitmap = Bitmap.createBitmap(getImage, 0, 0, getImage.getWidth(), getImage.getHeight(), matrix, false); // -90도를 더 회전시켜 0도로 만든 bitmap.
                 outUriStr = MediaStore.Images.Media.insertImage(
                         getContentResolver(), bitmap, "Captured Image", "Captured Image using Camera."
                 );

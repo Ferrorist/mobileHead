@@ -28,8 +28,10 @@ public class selectedImageActivity extends AppCompatActivity {
         Intent intent = getIntent();
         getImageUri = intent.getExtras().getString("imageString_cam");
         Bitmap bitmap;
-        Uri outUri = Uri.parse(getImageUri);
+        if(getImageUri != null) {
+            Uri outUri = Uri.parse(getImageUri);
 //        selectedImage.setImageResource(outUri);
+        }
         bt_selected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
