@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private final int REQUEST_CODE = 101;
     private Button bt_camera, bt_gallery;
     private String[] camera_permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +41,18 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     Intent intent = new Intent(MainActivity.this, CameraActivity.class);
                     startActivity(intent);
+                }
+            }
+        });
+
+        bt_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);
+                }
+                else{
+                    Intent intent;
                 }
             }
         });

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.hardware.Camera;
 import android.net.Uri;
@@ -23,7 +24,8 @@ public class CameraActivity extends AppCompatActivity{
     private ImageView square;
     private Button  bt_capture;
     private TextView textView;
-    CameraSurface surfaceView;
+    private String outUriStr;
+    private CameraSurface surfaceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,10 @@ public class CameraActivity extends AppCompatActivity{
                 textView.setVisibility(View.INVISIBLE);
                 square.setVisibility(View.INVISIBLE);
                 takePicture();
-              //  finish();
+                Intent intent = new Intent(CameraActivity.this, selectedImageActivity.class);
+                intent.putExtra("imageString_cam", outUriStr);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -51,9 +56,11 @@ public class CameraActivity extends AppCompatActivity{
     public void takePicture() {
         surfaceView.capture(new Camera.PictureCallback(){
             @Override
-            public void onPictureTaken(byte[] data, Camera camera) {
-                Bitmap  bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                String outUriStr = MediaStore.Images.Media.insertImage(
+            public void onPictureTaken(byte[] data, Camera camera) { // 사진을 찍은 후 callback 되는 함수.
+                Matrix matrix = new Matrix();   matrix.postRotate(90); // 회전 각도 조정.
+                Bitmap  getImage = BitmapFactory.decodeByteArray(data, 0, data.length); // -90도로 회전되어 있는 상태.
+                Bitmap  bitmap = Bitmap.createBitmap(getImage, 0, 0, getImage.getWidth(), getImage.getHeight(), matrix, false); // 90도를 더 회전시켜 0도로 만든 bitmap.
+                outUriStr = MediaStore.Images.Media.insertImage(
                         getContentResolver(), bitmap, "Captured Image", "Captured Image using Camera."
                 );
                 if(outUriStr == null){
