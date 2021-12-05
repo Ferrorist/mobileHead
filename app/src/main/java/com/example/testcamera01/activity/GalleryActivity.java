@@ -4,25 +4,28 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
 import com.example.testcamera01.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class GalleryActivity extends AppCompatActivity {
-    private Bitmap picture;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
         Intent intent = new Intent();
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+        intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, 101);
         finish();
@@ -35,12 +38,16 @@ public class GalleryActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 try {
                     InputStream is = getContentResolver().openInputStream(data.getData());
-                    picture = BitmapFactory.decodeStream(is);
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    is.close();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 72, stream);
+                    byte[] byteArray = stream.toByteArray();
                     Intent intent = new Intent(GalleryActivity.this, selectedImageActivity.class);
-                    intent.putExtra("image", picture);
+                    intent.putExtra("imagebyte", byteArray);
                     startActivity(intent);
                     finish();
-                } catch (FileNotFoundException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {

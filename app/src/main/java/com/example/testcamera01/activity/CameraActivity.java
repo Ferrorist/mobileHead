@@ -37,6 +37,10 @@ public class CameraActivity extends AppCompatActivity{
         frame.addView(surfaceView);
         bt_capture = findViewById(R.id.bt_capture);
         bt_change = findViewById(R.id.bt_change_cam);
+//        if(Camera.getNumberOfCameras() == 1){ // 카메라 개수가 단일인 경우 카메라 변경 버튼 제거
+            bt_change.setVisibility(View.INVISIBLE);
+            bt_change.setClickable(false);
+//        }
         textView = findViewById(R.id.cam_text);
         square = findViewById(R.id.square_view);
         bt_capture.setOnClickListener(new View.OnClickListener() {

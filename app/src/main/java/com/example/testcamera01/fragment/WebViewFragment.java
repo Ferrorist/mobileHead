@@ -27,10 +27,11 @@ public class WebViewFragment extends Fragment {
         Setting.setLoadWithOverviewMode(true);
         Setting.setUseWideViewPort(true);
         Setting.setDomStorageEnabled(true);
+        Setting.setJavaScriptCanOpenWindowsAutomatically(true);
 
         webView.setWebViewClient(new WebViewClient(){});
 
-        webView.loadUrl("https://diagnosehair.netlify.app/index.html");
+        webView.loadUrl("https://diagnosehair.netlify.app/");
         return view;
     }
 }

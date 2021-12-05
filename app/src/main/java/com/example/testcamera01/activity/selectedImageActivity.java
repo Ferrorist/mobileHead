@@ -31,7 +31,6 @@ public class selectedImageActivity extends AppCompatActivity {
         super.onResume();
         Intent intent = getIntent();
         byte[] arr = getIntent().getByteArrayExtra("imagebyte");
-//        bitmap = (Bitmap)intent.getParcelableExtra("image");
         bitmap = BitmapFactory.decodeByteArray(arr, 0, arr.length);
         selectedImage.setImageBitmap(bitmap);
         bt_selected.setOnClickListener(new View.OnClickListener() {

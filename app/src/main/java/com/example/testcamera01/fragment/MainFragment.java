@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +23,7 @@ import com.example.testcamera01.activity.MainActivity;
 
 public class MainFragment extends Fragment {
     private final int REQUEST_CODE = 101;
-    private Button bt_camera, bt_gallery;
+    private ImageButton bt_camera, bt_gallery;
     private String[] camera_permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     @Nullable
     @Override
