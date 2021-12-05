@@ -1,4 +1,4 @@
-package com.example.testcamera01;
+package com.example.testcamera01.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,12 +6,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.example.testcamera01.R;
+
 public class selectedImageActivity extends AppCompatActivity {
-    private String getImageUri;
+    private Bitmap bitmap;
     private ImageView selectedImage;
     private Button bt_selected;
     @Override
@@ -26,12 +29,8 @@ public class selectedImageActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Intent intent = getIntent();
-        getImageUri = intent.getExtras().getString("imageString_cam");
-        Bitmap bitmap;
-        if(getImageUri != null) {
-            Uri outUri = Uri.parse(getImageUri);
-//        selectedImage.setImageResource(outUri);
-        }
+        bitmap = (Bitmap)intent.getParcelableExtra("image");
+        selectedImage.setImageBitmap(bitmap);
         bt_selected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

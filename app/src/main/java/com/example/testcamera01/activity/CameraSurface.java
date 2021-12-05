@@ -1,4 +1,4 @@
-package com.example.testcamera01;
+package com.example.testcamera01.activity;
 
 import android.content.Context;
 import android.hardware.Camera;
