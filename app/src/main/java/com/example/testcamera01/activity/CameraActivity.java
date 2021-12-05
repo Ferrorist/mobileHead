@@ -92,6 +92,6 @@ public class CameraActivity extends AppCompatActivity{
                 finish();
                 break;
         }
-        return false;
+        return true;
     }
 }
