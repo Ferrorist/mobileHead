@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,7 +30,9 @@ public class selectedImageActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Intent intent = getIntent();
-        bitmap = (Bitmap)intent.getParcelableExtra("image");
+        byte[] arr = getIntent().getByteArrayExtra("imagebyte");
+//        bitmap = (Bitmap)intent.getParcelableExtra("image");
+        bitmap = BitmapFactory.decodeByteArray(arr, 0, arr.length);
         selectedImage.setImageBitmap(bitmap);
         bt_selected.setOnClickListener(new View.OnClickListener() {
             @Override

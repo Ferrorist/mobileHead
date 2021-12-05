@@ -10,19 +10,25 @@ import androidx.annotation.NonNull;
 import java.io.IOException;
 
 class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
-    private int frontCamId;
+    private int FRONT_CAM_CODE = Camera.CameraInfo.CAMERA_FACING_FRONT;
     private SurfaceHolder holder;
     public Camera camera = null;
+    public boolean isFront = true;
+    private int BACK_CAM_CODE = Camera.CameraInfo.CAMERA_FACING_BACK;
     public CameraSurface(Context context){
         super(context);
         holder = getHolder();
         holder.addCallback(this);
-        frontCamId = findFrontSideCamera();
     }
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
-        camera = Camera.open(frontCamId);
-        camera.setDisplayOrientation(90); // preview 90도로 돌림.
+        if(isFront == true) {
+            camera = Camera.open(FRONT_CAM_CODE);
+            camera.setDisplayOrientation(90); // preview 90도로 돌림.
+        }
+        else{
+            camera = Camera.open(BACK_CAM_CODE);
+        }
         try {
             camera.setPreviewDisplay(holder);
         } catch (IOException e) {
@@ -62,5 +68,16 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
         return cameraId;
+    }
+
+    public void ChangeCamera(){
+        isFront = !(isFront);
+        if(isFront == true) {
+            camera = Camera.open(FRONT_CAM_CODE);
+            camera.setDisplayOrientation(90); // preview 90도로 돌림.
+        }
+        else{
+            camera = Camera.open(BACK_CAM_CODE);
+        }
     }
 }

@@ -20,13 +20,13 @@ import android.widget.TextView;
 
 import com.example.testcamera01.R;
 
+import java.io.ByteArrayOutputStream;
+
 public class CameraActivity extends AppCompatActivity{
     private ImageView square;
-    private Button  bt_capture;
+    private Button  bt_capture, bt_change;
     private TextView textView;
-    private Uri outUri;
     private CameraSurface surfaceView;
-    private CameraThread thread;
     private Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,28 +36,25 @@ public class CameraActivity extends AppCompatActivity{
         surfaceView = new CameraSurface(this);
         frame.addView(surfaceView);
         bt_capture = findViewById(R.id.bt_capture);
+        bt_change = findViewById(R.id.bt_change_cam);
         textView = findViewById(R.id.cam_text);
         square = findViewById(R.id.square_view);
-        thread = new CameraThread(surfaceView, this);
         bt_capture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePicture();
             }
         });
-
+        bt_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { surfaceView.ChangeCamera(); }
+        });
     }
     public void takePicture(){
         bt_capture.setVisibility(View.INVISIBLE);
+        bt_change.setVisibility(View.INVISIBLE);
         textView.setVisibility(View.INVISIBLE);
         square.setVisibility(View.INVISIBLE);
-//        thread.run();
-//        try {
-//            thread.join();
-//
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
         cam_picture();
     }
 
@@ -65,26 +62,17 @@ public class CameraActivity extends AppCompatActivity{
         surfaceView.capture(new Camera.PictureCallback(){
             @Override
             public void onPictureTaken(byte[] data, Camera camera) { // 사진을 찍은 후 callback 되는 함수.
-                Matrix matrix = new Matrix();   matrix.postRotate(-90); // 회전 각도 조정.
+                Matrix matrix = new Matrix();    matrix.postRotate(-90); // 회전 각도 조정.
                 Bitmap  getImage = BitmapFactory.decodeByteArray(data, 0, data.length); // 90도로 회전되어 있는 상태.
                 Bitmap  bitmap = Bitmap.createBitmap(getImage, 0, 0, getImage.getWidth(), getImage.getHeight(), matrix, false); // -90도를 더 회전시켜 0도로 만든 bitmap.
-                String outUriStr = MediaStore.Images.Media.insertImage(
-                        getContentResolver(), bitmap, "Captured Image", "Captured Image using Camera."
-                );
-                Log.d("CameraActivity", "outUriStr in cam_picture = " + outUriStr);
-                if(outUriStr == null){
-                    Log.d("SampleCapture", "Image insert failed.");
-                    return;
-                }
-                else{
-                    Uri outUri = Uri.parse(outUriStr);
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, outUri));
-                    Log.d("CameraActivity", "outUriStr after sendBroadcast = " + outUriStr);
-                    Intent intent = new Intent(CameraActivity.this, selectedImageActivity.class);
-                    intent.putExtra("image", bitmap);
-                    startActivity(intent);
-                    finish();
-                }
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 72, stream);
+                byte[] byteArray = stream.toByteArray();
+                Intent intent = new Intent(CameraActivity.this, selectedImageActivity.class);
+                intent.putExtra("imagebyte", byteArray);
+                startActivity(intent);
+                finish();
+
             }
         });
     }
@@ -95,7 +83,11 @@ public class CameraActivity extends AppCompatActivity{
             case KeyEvent.KEYCODE_VOLUME_DOWN:
             case KeyEvent.KEYCODE_VOLUME_UP:
                 takePicture();
+                break;
+            case KeyEvent.KEYCODE_BACK:
+                finish();
+                break;
         }
-        return true;
+        return false;
     }
 }
